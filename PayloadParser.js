@@ -1,25 +1,22 @@
 function parseUplink(device, payload)
 {
-    // Obtener payload como JSON
+    // Obtener payload como Parsed
     
-    var data = payload.asJsonObject();
+    var dat = payload.asParsedObject();
+    env.log(dat);
     var loc = device.endpoints.byType(endpointType.locationTracker);
-    env.log(parsed); 
-
-    //const jsonPayload = payload.asParsedObject();
-    //const jsonPayload = payload.asString();
-    //const jsonPayload = payload.asBytes();
-
-    // No se puede deserializar el payload como json, salir.
-    if (!data) { return; }
-    
-    if(data.req.body.hotspots != null){
-
-    if(data.req.body.hotspots.lat != null && data.req.body.hotspots.long != null){   
-        if (loc != null)
-            loc.updateLocationTrackerStatus(data.req.body.hotspots.lat,data.req.body.hotspots.long);
-        }
-    }
+    if (loc != null && dat.payload.estimatedLocation.lat != null && dat.payload.estimatedLocation.long != null){
+      loc.updateLocationTrackerStatus(dat.payload.estimatedLocation.lat, dat.payload.estimatedLocation.long);
+    env.log(loc);}
+    var temp = device.endpoints.byType(endpointType.temperatureSensor);
+    if (temp != null && dat.payload.temperatures != null){
+    dat.payload.temperatures.forEach(valueElement => {    
+      temp.updateTemperatureSensorStatus(valueElement.temperatureCelsius);
+    env.log(temp);});}
+    var bat = device.endpoints.byType(endpointType.genericSensor);
+    if (bat != null && dat.payload.voltageMv != null){
+      bat.updateGenericSensorStatus(dat.payload.voltageMv);
+    env.log(bat);}
 }
 
 function buildDownlink(device, endpoint, command, payload) 
