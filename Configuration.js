@@ -24,7 +24,9 @@ function getEndpoints(deviceAddress, endpoints)
   // temperature sensor, while the second one is a carbon dioxide sensor.
 
    endpoints.addEndpoint("1", "Tracking Sensor", endpointType.locationTracker);
-  // endpoints.addEndpoint("2", "CO2 sensor", endpointType.ppmConcentrationSensor, ppmConcentrationSensorSubType.carbonDioxide);
+   endpoints.addEndpoint("2", "Temperature", endpointType.temperatureSensor);
+   var e = endpoints.addEndpoint("3", "Battery", endpointType.genericSensor);
+   e.variableTypeId = 1152;
 }
 
 function validateDeviceAddress(address, result)
@@ -56,7 +58,7 @@ function updateDeviceUIRules(device, rules)
   // user interface. This means that the device will be limited to the 
   // endpoints defined by function getEndpoints() above.
   
-  // rules.canCreateEndpoints = false;
+  rules.canCreateEndpoints = true;
 }
 
 function updateEndpointUIRules(endpoint, rules)
